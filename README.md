@@ -1,3 +1,5 @@
+Fork from https://github.com/BaerMitUmlaut/A3G-SpectatorCam to add compability with https://github.com/a3g/a3g-mission-template
+
 # A3G-SpectatorCam
 A simple spectator cam script made for AGM users. Compatible with ACRE and TFAR.
 
