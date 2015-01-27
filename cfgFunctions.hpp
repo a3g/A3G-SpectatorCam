@@ -1,4 +1,4 @@
-class A3G_SpectatorCam_Functions {
+class A3G_SpectatorCam {
 	class Functions	{
 		file = "a3g-spectatorcam\scripts";
 		class handleVisionSwitch {};
