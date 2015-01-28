@@ -31,7 +31,7 @@ A3G_SpectatorCamVisionMode = 0;		//0 - standard | 1 - night vision | 2 - thermal
 A3G_SpectatorCamTarget = _unit;
 A3G_SpectatorCamDir = direction A3G_SpectatorCamTarget;
 A3G_SpectatorCamPitch = -45;
-A3G_SpectatorCamVecDirUp = [A3G_SpectatorCamDir, A3G_SpectatorCamPitch] call A3GSC_fnc_CalcVecDir;
+A3G_SpectatorCamVecDirUp = [A3G_SpectatorCamDir, A3G_SpectatorCamPitch] call A3G_SpectatorCam_fnc_calcVecDir;
 A3G_SpectatorCamHeight = 3;
 
 A3G_SpectatorCam = "camera" camCreate (A3G_SpectatorCamTarget modelToWorld [0, -2.5, 3]);
@@ -47,7 +47,7 @@ cameraEffectEnableHUD true;
 	_deltaY = _this select 2;
 	A3G_SpectatorCamDir = A3G_SpectatorCamDir + _deltaX;
 	A3G_SpectatorCamPitch = -89 max (89 min (A3G_SpectatorCamPitch - _deltaY));
-	A3G_SpectatorCamVecDirUp = [A3G_SpectatorCamDir, A3G_SpectatorCamPitch] call A3GSC_fnc_CalcVecDir;
+	A3G_SpectatorCamVecDirUp = [A3G_SpectatorCamDir, A3G_SpectatorCamPitch] call A3G_SpectatorCam_fnc_calcVecDir;
 }];
 
 (findDisplay 46) displayRemoveAllEventHandlers "KeyDown";
@@ -62,8 +62,8 @@ cameraEffectEnableHUD true;
 		case 0x12: {A3G_SpectatorCamEDown = true};
 		case 0x2A: {A3G_SpectatorCamShiftDown = true};
 		case 0x38: {A3G_SpectatorCamAltDown = true};
-		case 0x39: {A3G_SpectatorCamViewMode = (A3G_SpectatorCamViewMode + 1) mod 3; [] call A3GSC_fnc_HandleCameraSwitch};
-		case 0x31: {A3G_SpectatorCamVisionMode = (A3G_SpectatorCamVisionMode + 1) mod 3; [] call A3GSC_fnc_HandleVisionSwitch};
+		case 0x39: {A3G_SpectatorCamViewMode = (A3G_SpectatorCamViewMode + 1) mod 3; [] call A3G_SpectatorCam_fnc_handleCameraSwitch};
+		case 0x31: {A3G_SpectatorCamVisionMode = (A3G_SpectatorCamVisionMode + 1) mod 3; [] call A3G_SpectatorCam_fnc_handleVisionSwitch};
 		case 0xCD: {
 			if !(isPlayer A3G_SpectatorCamTarget) then {
 				A3G_SpectatorCamTarget = playableUnits select 0;
@@ -72,7 +72,7 @@ cameraEffectEnableHUD true;
 			};
 			cutRsc ["A3GSC_titlePlayername", "PLAIN"];
 			((uiNamespace getVariable "dispPlayerName") displayCtrl 1) ctrlSetText (name A3G_SpectatorCamTarget);
-			[] call A3GSC_fnc_HandleCameraSwitch;
+			[] call A3G_SpectatorCam_fnc_handleCameraSwitch;
 		};
 		case 0xCB: {
 			if !(isPlayer A3G_SpectatorCamTarget) then {
@@ -82,7 +82,7 @@ cameraEffectEnableHUD true;
 			};
 			cutRsc ["A3GSC_titlePlayername", "PLAIN"];
 			((uiNamespace getVariable "dispPlayerName") displayCtrl 1) ctrlSetText (name A3G_SpectatorCamTarget);
-			[] call A3GSC_fnc_HandleCameraSwitch;
+			[] call A3G_SpectatorCam_fnc_handleCameraSwitch;
 		};
 	};
 	false
@@ -105,7 +105,7 @@ cameraEffectEnableHUD true;
 }];
 
 addMissionEventHandler ["Draw3D", {
-	
+
 	if (A3G_SpectatorCamViewMode == 0) then {
 		_factorSpeed = 0.4;
 		if (A3G_SpectatorCamShiftDown) then {
@@ -142,7 +142,7 @@ addMissionEventHandler ["Draw3D", {
 		if (A3G_SpectatorCamQDown) then {
 			_newPosDelta = _newPosDelta vectorDiff [0,0,0.5];
 		};
-		
+
 		_newPos = (getPos A3G_SpectatorCam) vectorAdd (_newPosDelta vectorMultiply (_factorSpeed * (1 max (10 min A3G_SpectatorCamHeight*0.05))));
 		A3G_SpectatorCam setPos _newPos;
 		A3G_SpectatorCam setVectorDirAndUp A3G_SpectatorCamVecDirUp;
