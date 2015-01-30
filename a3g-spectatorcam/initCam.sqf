@@ -1,9 +1,13 @@
 _unit = _this select 0;
 
-try {[player, true] call TFAR_fnc_forceSpectator} catch {};
-try {[true] call acre_api_fnc_setSpectator} catch {};
+if (!(alive player) && isMultiplayer && (count playableUnits == 0)) then {
+	[["LOSER", false],"BIS_fnc_endMission",true,true] call BIS_fnc_MP;
+};
 
-try {
+if ("task_force_radio" in activatedAddons) then {[player, true] call TFAR_fnc_forceSpectator};
+if ("acre_main" in activatedAddons) then {[true] call acre_api_fnc_setSpectator};
+
+if ("agm_medical" in activatedAddons) then {
 	player setVariable ["AGM_Bleeding", false];
 	player setVariable ["AGM_Unconscious", false];
 	player setVariable ["AGM_InPain", false];
@@ -14,7 +18,11 @@ try {
 	AGM_Pain_CC ppEffectEnable False;
 	AGM_Pain_CA ppEffectEnable False;
 	[false] call AGM_Core_fnc_disableUserInput;
-} catch {};
+};
+
+if ("agm_nametags" in activatedAddons) then {
+	AGM_NameTags_PlayerNamesViewDistance = 100;
+};
 
 A3G_SpectatorCamWDown = false;
 A3G_SpectatorCamADown = false;
@@ -40,6 +48,8 @@ A3G_SpectatorCam cameraEffect ["External", "BACK"];
 A3G_SpectatorCam camCommit 0;
 showCinemaBorder false;
 cameraEffectEnableHUD true;
+A3G_SpectatorCamHelpVisible = true;
+("A3GSC_Help" call BIS_fnc_rscLayer) cutRsc ["A3GSC_titleHelp", "PLAIN"];
 
 (findDisplay 46) displayRemoveAllEventHandlers "MouseMoving";
 (findDisplay 46) displayAddEventHandler ["MouseMoving", {
@@ -65,24 +75,43 @@ cameraEffectEnableHUD true;
 		case 0x39: {A3G_SpectatorCamViewMode = (A3G_SpectatorCamViewMode + 1) mod 3; [] call A3G_SpectatorCam_fnc_handleCameraSwitch};
 		case 0x31: {A3G_SpectatorCamVisionMode = (A3G_SpectatorCamVisionMode + 1) mod 3; [] call A3G_SpectatorCam_fnc_handleVisionSwitch};
 		case 0xCD: {
-			if !(isPlayer A3G_SpectatorCamTarget) then {
-				A3G_SpectatorCamTarget = playableUnits select 0;
+			if (count playableUnits > 0) then {
+				if !(isPlayer A3G_SpectatorCamTarget && (count playableUnits > 0)) then {
+					A3G_SpectatorCamTarget = playableUnits select 0;
+				} else {
+					A3G_SpectatorCamTarget = playableUnits select (((playableUnits find A3G_SpectatorCamTarget) + 1) mod (count playableUnits));
+				};
+				cutRsc ["A3GSC_titlePlayername", "PLAIN"];
+				((uiNamespace getVariable "A3GSC_dispPlayerName") displayCtrl 1) ctrlSetText (name A3G_SpectatorCamTarget);
+				[] call A3G_SpectatorCam_fnc_handleCameraSwitch;
 			} else {
-				A3G_SpectatorCamTarget = playableUnits select (((playableUnits find A3G_SpectatorCamTarget) + 1) mod (count playableUnits));
+				cutRsc ["A3GSC_titlePlayername", "PLAIN"];
+				((uiNamespace getVariable "A3GSC_dispPlayerName") displayCtrl 1) ctrlSetText (name A3G_SpectatorCamTarget);
 			};
-			cutRsc ["A3GSC_titlePlayername", "PLAIN"];
-			((uiNamespace getVariable "dispPlayerName") displayCtrl 1) ctrlSetText (name A3G_SpectatorCamTarget);
-			[] call A3G_SpectatorCam_fnc_handleCameraSwitch;
 		};
 		case 0xCB: {
-			if !(isPlayer A3G_SpectatorCamTarget) then {
-				A3G_SpectatorCamTarget = playableUnits select 0;
+			if (count playableUnits > 0) then {
+				if !(isPlayer A3G_SpectatorCamTarget) then {
+					A3G_SpectatorCamTarget = playableUnits select 0;
+				} else {
+					A3G_SpectatorCamTarget = playableUnits select (((playableUnits find A3G_SpectatorCamTarget) - 1 + (count playableUnits)) mod (count playableUnits));
+				};
+				cutRsc ["A3GSC_titlePlayername", "PLAIN"];
+				((uiNamespace getVariable "A3GSC_dispPlayerName") displayCtrl 1) ctrlSetText (name A3G_SpectatorCamTarget);
+				[] call A3G_SpectatorCam_fnc_handleCameraSwitch;
 			} else {
-				A3G_SpectatorCamTarget = playableUnits select (((playableUnits find A3G_SpectatorCamTarget) - 1 + (count playableUnits)) mod (count playableUnits));
+				cutRsc ["A3GSC_titlePlayername", "PLAIN"];
+				((uiNamespace getVariable "A3GSC_dispPlayerName") displayCtrl 1) ctrlSetText (name A3G_SpectatorCamTarget);
 			};
-			cutRsc ["A3GSC_titlePlayername", "PLAIN"];
-			((uiNamespace getVariable "dispPlayerName") displayCtrl 1) ctrlSetText (name A3G_SpectatorCamTarget);
-			[] call A3G_SpectatorCam_fnc_handleCameraSwitch;
+		};
+		case 0x23: {
+			if (A3G_SpectatorCamHelpVisible) then {
+				A3G_SpectatorCamHelpVisible = false;
+				("A3GSC_Help" call BIS_fnc_rscLayer) cutText ["", "PLAIN"];
+			} else {
+				A3G_SpectatorCamHelpVisible = true;
+				("A3GSC_Help" call BIS_fnc_rscLayer) cutRsc ["A3GSC_titleHelp", "PLAIN"];
+			};
 		};
 	};
 	false
@@ -155,39 +184,39 @@ addMissionEventHandler ["Draw3D", {
 		switch (side group _x) do {
 			case west: {
 				if ((A3G_SpectatorCam distance _x > 500) && (isFormationLeader _x)) then {
-					drawIcon3D ["\A3\ui_f\data\map\Markers\NATO\b_unknown.paa", [0,0,0.8,0.5], _tagPosition, 1, 1, 0];
+					drawIcon3D ["\A3\ui_f\data\map\Markers\NATO\b_unknown.paa", [0,0.3,0.6,0.5], _tagPosition, 1, 1, 0];
 				} else {
 					if (A3G_SpectatorCam distance leader group _x <= 500) then {
 						if (captive _x) then {
-							drawIcon3D ["\a3\ui_f\data\map\MapControl\tree_ca.paa", [0,0,0.8,0.5], _tagPosition, 0.5, 0.5, 0];
+							drawIcon3D ["\a3\ui_f\data\map\MapControl\tree_ca.paa", [0,0.3,0.6,0.5], _tagPosition, 0.5, 0.5, 0];
 						} else {
-							drawIcon3D ["\a3\ui_f\data\map\Markers\Military\dot_ca.paa", [0,0,0.8,0.5], _tagPosition, 1, 1, 0];
+							drawIcon3D ["\a3\ui_f\data\map\Markers\Military\dot_ca.paa", [0,0.3,0.6,0.5], _tagPosition, 1, 1, 0];
 						};
 					};
 				};
 			};
 			case east: {
 				if ((A3G_SpectatorCam distance _x > 500) && (isFormationLeader _x)) then {
-					drawIcon3D ["\A3\ui_f\data\map\Markers\NATO\o_unknown.paa", [0.6,0,0,0.5], _tagPosition, 1, 1, 0];
+					drawIcon3D ["\A3\ui_f\data\map\Markers\NATO\o_unknown.paa", [0.5,0,0,0.5], _tagPosition, 1, 1, 0];
 				} else {
 					if (A3G_SpectatorCam distance leader group _x <= 500) then {
 						if (captive _x) then {
-							drawIcon3D ["\a3\ui_f\data\map\MapControl\tree_ca.paa", [0.64,0,0,0.5], _tagPosition, 0.5, 0.5, 0];
+							drawIcon3D ["\a3\ui_f\data\map\MapControl\tree_ca.paa", [0.5,0,0,0.5], _tagPosition, 0.5, 0.5, 0];
 						} else {
-							drawIcon3D ["\a3\ui_f\data\map\Markers\Military\dot_ca.paa", [0.64,0,0,0.5], _tagPosition, 1, 1, 0];
+							drawIcon3D ["\a3\ui_f\data\map\Markers\Military\dot_ca.paa", [0.5,0,0,0.5], _tagPosition, 1, 1, 0];
 						};
 					};
 				};
 			};
 			case independent: {
 				if ((A3G_SpectatorCam distance _x > 500) && (isFormationLeader _x)) then {
-					drawIcon3D ["\A3\ui_f\data\map\Markers\NATO\n_unknown.paa", [0,0.64,0,0.5], _tagPosition, 1, 1, 0];
+					drawIcon3D ["\A3\ui_f\data\map\Markers\NATO\n_unknown.paa", [0,0.5,0,0.5], _tagPosition, 1, 1, 0];
 				} else {
 					if (A3G_SpectatorCam distance leader group _x <= 500) then {
 						if (captive _x) then {
-							drawIcon3D ["\a3\ui_f\data\map\MapControl\tree_ca.paa", [0,0.64,0,0.5], _tagPosition, 0.5, 0.5, 0];
+							drawIcon3D ["\a3\ui_f\data\map\MapControl\tree_ca.paa", [0,0.5,0,0.5], _tagPosition, 0.5, 0.5, 0];
 						} else {
-							drawIcon3D ["\a3\ui_f\data\map\Markers\Military\dot_ca.paa", [0,0.64,0,0.5], _tagPosition, 1, 1, 0];
+							drawIcon3D ["\a3\ui_f\data\map\Markers\Military\dot_ca.paa", [0,0.5,0,0.5], _tagPosition, 1, 1, 0];
 						};
 					};
 				};
