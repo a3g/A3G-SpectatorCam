@@ -237,7 +237,7 @@ class A3GSC_titleHelp {
 
 class A3GSC_titleServerInfo {
 	idd = -1;
-	onLoad = "((_this select 0) displayCtrl 1) ctrlSetText ('Players alive: ' + str (count playableUnits)); ((_this select 0) displayCtrl 2) ctrlSetText ('Players unconscious: ' + str ({captive _x} count playableUnits))";
+	onLoad = "((_this select 0) displayCtrl 1) ctrlSetText ('Players alive: ' + str (count (playableUnits + switchableUnits))); ((_this select 0) displayCtrl 2) ctrlSetText ('Players unconscious: ' + str ({captive _x} count (playableUnits + switchableUnits)))";
 	duration = 86400;
 	fadein = 0;
 	fadeout = 0;
@@ -254,7 +254,7 @@ class A3GSC_titleServerInfo {
 			w = 0.3;
 			x = safeZoneX + 0.03;
 			y = safeZoneY + safeZoneH - 0.55;
-			text = "";
+			text = "# player placeholder";
 		};
 		class A3GSC_UnconsciousCount {
 			type = 0;
@@ -268,7 +268,7 @@ class A3GSC_titleServerInfo {
 			w = 0.3;
 			x = safeZoneX + 0.03;
 			y = safeZoneY + safeZoneH - 0.5;
-			text = "asdsad";
+			text = "# unconscious placeholder";
 		};
 	};
 };
