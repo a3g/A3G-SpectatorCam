@@ -16,6 +16,7 @@ if ("agm_medical" in activatedAddons) then {
 	[false] call AGM_Core_fnc_disableUserInput;
 };
 
+_backupNametagDistance = AGM_NameTags_PlayerNamesViewDistance;
 if ("agm_nametags" in activatedAddons) then {
 	AGM_NameTags_PlayerNamesViewDistance = 100;
 };
@@ -129,8 +130,7 @@ A3G_SpectatorCamHelpVisible = true;
 	false
 }];
 
-addMissionEventHandler ["Draw3D", {
-
+_index = addMissionEventHandler ["Draw3D", {
 	if (A3G_SpectatorCamViewMode == 0) then {
 		_factorSpeed = 0.4;
 		if (A3G_SpectatorCamShiftDown) then {
@@ -221,3 +221,22 @@ addMissionEventHandler ["Draw3D", {
 	} foreach allUnits;
 
 }];
+
+// Undo script on respawn
+waitUntil { playerRespawnTime <= 0 };
+
+removeMissionEventHandler ["Draw3D", _index];
+(findDisplay 46) displayRemoveAllEventHandlers "KeyUp";
+(findDisplay 46) displayRemoveAllEventHandlers "KeyDown";
+(findDisplay 46) displayRemoveAllEventHandlers "MouseMoving";
+
+("A3GSC_Help" call BIS_fnc_rscLayer) cutText ["", "PLAIN"];
+A3G_SpectatorCam cameraEffect ["terminate","back"];
+camDestroy A3G_SpectatorCam;
+
+if ("agm_nametags" in activatedAddons) then {
+	AGM_NameTags_PlayerNamesViewDistance = _backupNametagDistance;
+};
+
+if ("acre_main" in activatedAddons) then {[false] call acre_api_fnc_setSpectator};
+if ("task_force_radio" in activatedAddons) then {[player, false] call TFAR_fnc_forceSpectator};
