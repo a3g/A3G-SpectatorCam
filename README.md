@@ -5,7 +5,7 @@ A simple spectator cam script made for AGM users. Compatible with ACRE and TFAR.
 
 ## Usage
 To activate the camera when the player gets killed just copy the following lines of code into your Description.ext:
-```
+```c++
 respawnTemplates[] = {"A3G_SpectatorCam"};
 
 class CfgRespawnTemplates {
