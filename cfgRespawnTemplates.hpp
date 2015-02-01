@@ -1,4 +1,4 @@
 class A3G_SpectatorCam {
-	onPlayerKilled = "a3g-spectatorcam\scripts\initCam.sqf";
+	onPlayerKilled = "A3G_SpectatorCam_fnc_InitCam";
 	respawnDelay = 1e10;
 };

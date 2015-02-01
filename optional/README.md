@@ -1,0 +1,3 @@
+Want to prevent people from reslotting in your mission?
+Simply copy this script file in your missions main directory.
+Everybody who joins later than 5 minutes after the mission got started will instead be put in spectator mode.
