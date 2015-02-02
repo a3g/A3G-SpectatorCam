@@ -20,7 +20,7 @@ class CfgFunctions {
 ```
 Make sure you don't have any duplicate settings in your Description.ext.
 
-Ideally you're using the script with the `BASE` ![https://community.bistudio.com/wiki/Arma_3_Respawn#Respawn_Types](respawn type). This is because the `BASE` respawn type does not consume slots if people leave and come back to your mission. The script is compatible with respawn. You can set `respawnDelay = ` to any value you want, setting it to a really really high value with `BASE` respawn type essentially disables respawn, while keeping the other benefits.
+Ideally you're using the script with the `BASE` [https://community.bistudio.com/wiki/Arma_3_Respawn#Respawn_Types](respawn type). This is because the `BASE` respawn type does not consume slots if people leave and come back to your mission. The script is compatible with respawn. You can set `respawnDelay = ` to any value you want, setting it to a really really high value with `BASE` respawn type essentially disables respawn, while keeping the other benefits.
 
 You can also execute the camera during the mission by using `[player] spawn A3G_SpectatorCam_fnc_InitCam`, just be aware that there is right now no way to exit the spectator camera, so you will be stuck in the camera until you respawn.
 
