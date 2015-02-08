@@ -9,13 +9,13 @@ To activate the camera when the player gets killed just copy the following lines
 respawnTemplates[] = {"A3G_SpectatorCam"};
 
 class CfgRespawnTemplates {
-	#include "a3g-spectatorcam\cfgRespawnTemplates.hpp"
+  #include "a3g-spectatorcam\cfgRespawnTemplates.hpp"
 };
 class RscTitles {
-	#include "a3g-spectatorcam\rscTitles.hpp"
+  #include "a3g-spectatorcam\rscTitles.hpp"
 };
 class CfgFunctions {
-	#include "a3g-spectatorcam\cfgFunctions.hpp"
+  #include "a3g-spectatorcam\cfgFunctions.hpp"
 };
 ```
 Make sure you don't have any duplicate settings in your Description.ext.
