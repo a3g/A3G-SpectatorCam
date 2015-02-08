@@ -1,6 +1,6 @@
 class A3G_SpectatorCam {
 	class Functions {
-		file = "a3g-spectatorcam\functions";
+		file = "a3g-spectator-cam\functions";
 		class HandleVisionSwitch {};
 		class HandleCameraSwitch {};
 		class CalcVecDir {};
