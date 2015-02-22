@@ -1,4 +1,4 @@
-private["_dir","_angle","_vecdx","_vecdy","_vecdz","_vecuz"];
+private ["_dir", "_angle", "_vecdx", "_vecdy", "_vecdz", "_vecuz"];
 
 _dir = _this select 0;
 _angle = _this select 1;

@@ -1,3 +1,5 @@
+private ["_unit", "_backupNametagDistance", "_deltaX", "_deltaY", "_keycode", "_index", "_factorSpeed", "_newPosDelta", "_vecDir", "_newPos", "_tagPosition"];
+
 _unit = _this select 0;
 
 if ("task_force_radio" in activatedAddons) then {[player, true] call TFAR_fnc_forceSpectator};

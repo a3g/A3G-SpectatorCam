@@ -1,4 +1,4 @@
-private ["_vectorLength", "_camTarget", "_nearestLand", "_nearestMan"];
+private ["_vectorLength", "_camTarget", "_nearestMan", "_nearestLand"];
 
 switch (A3G_SpectatorCamViewMode) do {
   case 0: {
