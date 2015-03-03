@@ -5,7 +5,7 @@ class A3G_SpectatorCam {
     class HandleCameraSwitch {};
     class CalcVecDir {};
     class ServerInfo {
-      postInit = 1
+      postInit = 1;
     };
     class InitCam {};
   };
