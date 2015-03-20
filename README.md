@@ -1,9 +1,9 @@
-Fork from https://github.com/BaerMitUmlaut/A3G-SpectatorCam to add compability with https://github.com/a3g/a3g-mission-template
+Forked from https://github.com/BaerMitUmlaut/A3G-SpectatorCam to add compability with the [A3G Framework](https://github.com/a3g/a3g-framework-modules).
 
-# A3G-SpectatorCam
+#A3G Spectator Cam
 A simple spectator cam script made for AGM users. Compatible with ACRE and TFAR.
 
-## Usage
+##Usage
 To activate the camera when the player gets killed just copy the following lines of code into your Description.ext:
 ```c++
 respawnTemplates[] = {"A3G_SpectatorCam"};
@@ -24,7 +24,7 @@ Ideally you're using the script with the `BASE` [respawn type](https://community
 
 You can also execute the camera during the mission by using `[player] spawn A3G_SpectatorCam_fnc_InitCam`, just be aware that there is right now no way to exit the spectator camera, so you will be stuck in the camera until you respawn.
 
-## Controls
+##Controls
 Keybind | Usage
 ------- | -----
 H | Show/Hide help
@@ -36,5 +36,5 @@ N | Default vision/night vision/thermal vision
 Space | Free cam/3rd person/1st person - aim at unit to spectate
 Arrow left/right | Switch to previous/next player
 
-## Requirements
+##Requirements
 This camera was intended to be used with AGM, however it should also work without AGM. Nothing else is required.
