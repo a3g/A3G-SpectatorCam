@@ -1,4 +1,4 @@
-#ifdef A3G_Framework_state_Module
+#ifdef A3GFramework_state_Module
 class A3G_SpectatorCam {
   name = "A3G Spectator Cam";
   description = "A simple spectator cam script made for AGM users. Compatible with ACRE and TFAR.";
@@ -6,14 +6,14 @@ class A3G_SpectatorCam {
 };
 #endif
 
-#ifdef A3G_Framework_state_Functions
+#ifdef A3GFramework_state_Functions
   #include "cfgFunctions.hpp"
 #endif
 
-#ifdef A3G_Framework_state_RespawnTemplates
+#ifdef A3GFramework_state_RespawnTemplates
   #include "cfgRespawnTemplates.hpp"
 #endif
 
-#ifdef A3G_Framework_state_RscTitles
+#ifdef A3GFramework_state_RscTitles
   #include "rscTitles.hpp"
 #endif
