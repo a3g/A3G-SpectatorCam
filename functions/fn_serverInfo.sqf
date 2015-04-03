@@ -4,4 +4,4 @@
 
   waitUntil {isNull findDisplay 49};
   ("serverInfo" call BIS_fnc_rscLayer) cutText ["", "PLAIN"];
-};};
+};
